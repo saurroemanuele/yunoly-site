@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-4l9j4vhLuM8Bwx8UTEyExWPzraLvuK7fCr6mQqj8Uu4=' 'sha256-inxVt+aor7Iizx8RLmx2/yzoWYkxQe+7W8yyZMVtIyI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src https://jhoidpugjjvvkjccyrxg.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-YB+2exmE+RHRk+z0aZkmutNm5WRrlDsULC/DhGowjqo=' 'sha256-inxVt+aor7Iizx8RLmx2/yzoWYkxQe+7W8yyZMVtIyI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src https://jhoidpugjjvvkjccyrxg.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; manifest-src 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Yunoly — Studio di app social-first</title>
@@ -333,6 +333,9 @@ a{color:#0b0f19}a:hover{color:#1e5ef5}
 (function(){
 var SB_URL='https://jhoidpugjjvvkjccyrxg.supabase.co';
 var SB_KEY='sb_publishable_vam6nGEE5qCrRCXknhoWqQ_GvrpnvzR';
+  var YN_DA=(function(){var d='';try{d=(new URLSearchParams(location.search).get('da')||'').toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,30);if(d)sessionStorage.setItem('yn_da',d);else d=sessionStorage.getItem('yn_da')||'';}catch(e){}return d;})();
+  (function(){try{if(sessionStorage.getItem('yn_v'))return;var sid=(crypto.randomUUID&&crypto.randomUUID())||'';if(!sid)return;sessionStorage.setItem('yn_v','1');fetch(SB_URL+'/rest/v1/rpc/track_yunoly_visit',{method:'POST',keepalive:true,headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_sid:sid,p_src:YN_DA||'diretto'})}).catch(function(){});}catch(e){}})();
+
 var REQ={investitore:['ruolo','ticket','fonte'],creator:['follower'],founder:[],contatto:[]};
 var COLS=['nome','email','ruolo','ticket','fonte','telefono','linkedin','app_link','handle','follower','messaggio'];
 var modal=document.getElementById('yn-modal'), lastFocus=null;
@@ -368,7 +371,7 @@ modal.querySelectorAll('.yn-form').forEach(function(form){
     var fd=new FormData(form);
     var done=function(){form.hidden=true;modal.querySelector('.yn-sent').hidden=false;form.reset();form.querySelectorAll('.yn-dd').forEach(function(d){d.classList.remove('has-value');d.querySelector('.yn-dd-val').textContent='Seleziona';d.querySelectorAll('.yn-opt').forEach(function(x){x.removeAttribute('aria-selected');});});};
     if(fd.get('website')){done();return;}
-    var data={tipo:tipo};COLS.forEach(function(c){var v=fd.get(c);if(v&&String(v).trim())data[c]=String(v).trim();});
+    var data={tipo:tipo};if(YN_DA)data.da=YN_DA;COLS.forEach(function(c){var v=fd.get(c);if(v&&String(v).trim())data[c]=String(v).trim();});
     var b=form.querySelector('.yn-submit');b.disabled=true;
     fetch(SB_URL+'/rest/v1/rpc/submit_yunoly_lead',{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({p:data})})
       .then(function(r){if(!r.ok)throw new Error(r.status);done();})
