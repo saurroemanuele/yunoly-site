@@ -11,7 +11,7 @@
 <meta property="og:url" content="https://yunoly.com/">
 <meta property="og:image" content="https://yunoly.com/assets/yunoly-logo.png">
 <link rel="icon" type="image/png" href="assets/yunoly-logo.png">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" id="yn-theme">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,500..800&amp;display=swap" rel="stylesheet">
 <style>
@@ -374,6 +374,19 @@ modal.querySelectorAll('.yn-form').forEach(function(form){
       .finally(function(){b.disabled=false;});
   });
 });
+})();
+</script>
+<script>
+(function(){
+var meta=document.getElementById('yn-theme'), story=document.getElementById('studio'), root=document.documentElement, cur='';
+var STOPS=[[0,'#ffffff'],[0.25,'#e8eefd'],[0.5,'#2a63f2'],[0.75,'#0a0f1f']];
+function pick(){
+  var c='#ffffff';
+  if(story){var r=story.getBoundingClientRect(),h=window.innerHeight;
+    if(r.top<=1&&r.bottom>=h-1){var p=(-r.top)/Math.max(1,r.height-h);for(var i=0;i<STOPS.length;i++){if(p>=STOPS[i][0])c=STOPS[i][1];}}}
+  if(c!==cur){cur=c;meta.setAttribute('content',c);root.style.backgroundColor=c;document.body.style.backgroundColor=c;}
+}
+window.addEventListener('scroll',pick,{passive:true});window.addEventListener('resize',pick);pick();
 })();
 </script>
 </body>
