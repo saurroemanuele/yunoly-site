@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yunoly — Studio di app social-first</title>
+<meta name="description" content="Yunoly è uno studio di app social-first: costruiamo, validiamo in 30 giorni e scaliamo app consumer che crescono dove le persone guardano.">
+<meta property="og:title" content="Yunoly — Studio di app social-first">
+<meta property="og:description" content="Costruiamo app che crescono dove le persone guardano.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yunoly.com/">
+<meta property="og:image" content="https://yunoly.com/assets/yunoly-logo.png">
+<link rel="icon" type="image/png" href="assets/yunoly-logo.png">
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,500..800&amp;display=swap" rel="stylesheet">
+<style>
+[hidden]{display:none !important}
+html{scroll-behavior:smooth}
+.yn-modal{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(11,15,25,0.38);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.yn-modal-panel{position:relative;width:100%;max-width:540px;max-height:92svh;overflow-y:auto;padding:36px 32px 28px;background:#ffffff;border-radius:30px;box-shadow:0 40px 100px rgba(11,15,25,0.25);font-family:'Plus Jakarta Sans',Arial,sans-serif;color:#0b0f19}
+.yn-dd-btn{width:100%;min-height:48px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;border:1.5px solid #dde4f2;border-radius:14px;background:#f8faff;font-family:inherit;font-size:16px;font-weight:500;color:#8b93a6;text-align:left;cursor:pointer}
+.yn-dd.has-value .yn-dd-btn{color:#0b0f19}
+.yn-dd.open .yn-dd-btn{border-color:#1e5ef5}
+.yn-dd.error .yn-dd-btn{border-color:#ea580c}
+.yn-dd-menu{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 6px);display:flex;flex-direction:column;gap:2px;padding:6px;background:#fff;border:1px solid #e3e9f5;border-radius:16px;box-shadow:0 20px 50px rgba(11,15,25,0.14)}
+.yn-opt{min-height:44px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;border:0;border-radius:10px;background:transparent;color:#0b0f19;font-family:inherit;font-size:15px;font-weight:500;text-align:left;cursor:pointer}
+.yn-opt:hover{background:#f2f5fb}
+.yn-opt[aria-selected="true"]{background:#eef3ff;color:#1e5ef5;font-weight:700}
+.yn-chk{visibility:hidden;color:#1e5ef5}.yn-opt[aria-selected="true"] .yn-chk{visibility:visible}
+.yn-dd-err{font-size:12px;font-weight:600;color:#c2410c}
+.yn-form input:focus,.yn-form textarea:focus{outline:none;border-color:#1e5ef5 !important}
+.yn-submit[disabled]{opacity:.6;cursor:progress}
+
+body{margin:0;background:#ffffff}
+*{box-sizing:border-box}
+a{color:#0b0f19}a:hover{color:#1e5ef5}
+.yn-chip{position:relative;display:inline-flex;cursor:pointer}
+.yn-chip input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.yn-chip span{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1.5px solid #dde4f2;border-radius:999px;background:#f8faff;font-size:14px;font-weight:600;color:#3d4557;transition:background .15s,border-color .15s,color .15s}
+.yn-chip:hover span{border-color:#b9ccfb}
+.yn-opt:hover{background:#f2f5fb !important}
+.yn-chip input:checked+span{background:#1e5ef5;border-color:#1e5ef5;color:#ffffff}
+.yn-chip input:focus-visible+span{outline:2px solid #1e5ef5;outline-offset:2px}
+@keyframes yn-rise{from{opacity:0;transform:translateY(48px)}to{opacity:1;transform:none}}
+@keyframes yn-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes yn-arc{from{transform:translateY(0)}to{transform:translateY(-90px)}}
+@keyframes yn-fan-l2{from{transform:translateX(150px) rotate(0deg) scale(.92)}to{transform:translateX(0) rotate(-9deg) scale(.92)}}
+@keyframes yn-fan-l1{from{transform:translateX(70px) rotate(0deg) scale(.96)}to{transform:translateX(0) rotate(-4deg) scale(.96)}}
+@keyframes yn-fan-r1{from{transform:translateX(-70px) rotate(0deg) scale(.96)}to{transform:translateX(0) rotate(4deg) scale(.96)}}
+@keyframes yn-fan-r2{from{transform:translateX(-150px) rotate(0deg) scale(.92)}to{transform:translateX(0) rotate(9deg) scale(.92)}}
+@keyframes yn-hl2{from{transform:rotate(-8deg)}to{transform:translate(-18px,-70px) rotate(-10deg)}}
+@keyframes yn-hl1{from{transform:rotate(-4deg)}to{transform:translate(-8px,-90px) rotate(-5deg)}}
+@keyframes yn-hc{from{transform:none}to{transform:translateY(-100px) scale(1.04)}}
+@keyframes yn-hr1{from{transform:rotate(4deg)}to{transform:translate(8px,-90px) rotate(5deg)}}
+@keyframes yn-hr2{from{transform:rotate(8deg)}to{transform:translate(18px,-70px) rotate(10deg)}}
+@keyframes yn-swoop{0%{left:22%;top:108%;opacity:0;transform:perspective(1000px) rotate(14deg) rotateY(26deg) scale(.92)}12%{opacity:1}28%{left:18%;top:62%;opacity:1;transform:perspective(1000px) rotate(8deg) rotateY(18deg) scale(1)}48%{left:13%;top:52%;transform:perspective(1000px) rotate(2deg) rotateY(4deg) scale(1.04)}68%{left:12%;top:41%;opacity:1;transform:perspective(1000px) rotate(-6deg) rotateY(-12deg) scale(1.02)}86%{left:16%;top:30%;opacity:.6;transform:perspective(1000px) rotate(-14deg) rotateY(-26deg) scale(.94)}100%{left:24%;top:21%;opacity:0;transform:perspective(1000px) rotate(-22deg) rotateY(-40deg) scale(.82)}}
+@keyframes yn-depth{0%{left:76.0%;top:54%;opacity:0;filter:blur(10px) drop-shadow(0 24px 36px rgba(8,22,70,0.22));transform:perspective(1000px) rotate(-10deg) rotateY(-30deg) scale(.25)}22%{left:79.0%;top:52%;opacity:1;filter:blur(2px) drop-shadow(0 24px 36px rgba(8,22,70,0.22));transform:perspective(1000px) rotate(-4deg) rotateY(-14deg) scale(.7)}55%{left:83.0%;top:49%;opacity:1;filter:blur(0px) drop-shadow(0 24px 36px rgba(8,22,70,0.22));transform:perspective(1000px) rotate(4deg) rotateY(6deg) scale(1.05)}82%{left:90.0%;top:44%;opacity:1;filter:blur(1px) drop-shadow(0 30px 40px rgba(8,22,70,0.25));transform:perspective(1000px) rotate(14deg) rotateY(22deg) scale(1.45)}100%{left:108.0%;top:38%;opacity:0;filter:blur(8px) drop-shadow(0 30px 40px rgba(8,22,70,0.25));transform:perspective(1000px) rotate(26deg) rotateY(40deg) scale(2)}}
+@keyframes yn-grow-curve{0%{left:-8%;top:90%;opacity:0;transform:perspective(1000px) rotate(4deg) scale(.8)}12%{left:8%;top:89%;opacity:1;transform:perspective(1000px) rotate(0deg) scale(.9)}35%{left:32%;top:86%;transform:perspective(1000px) rotate(-4deg) scale(.95)}58%{left:58%;top:81%;transform:perspective(1000px) rotate(-10deg) scale(1)}78%{left:80%;top:62%;opacity:1;transform:perspective(1000px) rotate(-22deg) scale(1.05)}100%{left:92%;top:24%;opacity:0;transform:perspective(1000px) rotate(-34deg) scale(1.1)}}
+@keyframes yn-strike{0%{left:14%;top:-15%;opacity:0;filter:drop-shadow(0 0 0 rgba(143,176,255,0));transform:perspective(1000px) rotate(-28deg) scale(1.25)}10%{left:16%;top:56%;opacity:1;filter:drop-shadow(0 0 60px rgba(143,176,255,0.95));transform:perspective(1000px) rotate(4deg) scale(1.08)}16%{left:16%;top:47%;filter:drop-shadow(0 0 40px rgba(143,176,255,0.7));transform:perspective(1000px) rotate(-3deg) scale(1)}22%{left:16%;top:51%;filter:drop-shadow(0 0 24px rgba(143,176,255,0.5));transform:perspective(1000px) rotate(1deg) scale(1)}60%{left:16%;top:49%;filter:drop-shadow(0 0 30px rgba(143,176,255,0.6));transform:perspective(1000px) rotate(-2deg) rotateY(10deg) scale(1.02)}100%{left:16%;top:47%;opacity:1;filter:drop-shadow(0 0 22px rgba(143,176,255,0.45));transform:perspective(1000px) rotate(3deg) rotateY(-10deg) scale(1)}}
+@keyframes yn-on{from{opacity:1}to{opacity:1}}
+@keyframes yn-corner{from{border-radius:40px 40px 0 0}to{border-radius:0}}
+@keyframes yn-fill{from{width:0}to{width:calc(75% + 36px)}}
+@keyframes yn-dot{from{background:#ffffff;border-color:#c9d3e6}to{background:#1e5ef5;border-color:#1e5ef5}}
+@keyframes yn-num{from{color:#c9d3e6}to{color:#1e5ef5}}
+@keyframes yn-tf{0%,94%{color:#0b0f19}100%{color:#d3dae8}}
+@keyframes yn-tm{0%{color:#d3dae8}6%,94%{color:#0b0f19}100%{color:#d3dae8}}
+@keyframes yn-tl{0%{color:#d3dae8}6%,100%{color:#0b0f19}}
+@keyframes yn-df{0%,94%{max-height:120px;opacity:1}100%{max-height:0;opacity:0}}
+@keyframes yn-dm{0%{max-height:0;opacity:0}6%,94%{max-height:120px;opacity:1}100%{max-height:0;opacity:0}}
+@keyframes yn-dl{0%{max-height:0;opacity:0}6%,100%{max-height:120px;opacity:1}}
+@keyframes yn-wf{0%,94%{color:#1e5ef5}100%{color:#0b0f19}}
+@keyframes yn-wm{0%{color:#dfe6f3}6%,94%{color:#1e5ef5}100%{color:#0b0f19}}
+@keyframes yn-wl{0%{color:#dfe6f3}6%,100%{color:#1e5ef5}}
+@keyframes yn-mob{0%{left:50%;top:calc(50% - 90px);opacity:0;transform:perspective(800px) rotate(-10deg) rotateY(-25deg) scale(.7)}18%{left:50%;top:calc(50% - 150px);opacity:1;transform:perspective(800px) rotate(-3deg) rotateY(-8deg) scale(1)}82%{left:50%;top:calc(50% - 160px);opacity:1;transform:perspective(800px) rotate(4deg) rotateY(10deg) scale(1)}100%{left:50%;top:calc(50% - 200px);opacity:0;transform:perspective(800px) rotate(10deg) rotateY(24deg) scale(.8)}}
+@keyframes yn-mob-last{0%{left:50%;top:calc(50% - 90px);opacity:0;transform:perspective(800px) rotate(-10deg) rotateY(-25deg) scale(.7)}18%{left:50%;top:calc(50% - 150px);opacity:1;transform:perspective(800px) rotate(-3deg) rotateY(-8deg) scale(1)}100%{left:50%;top:calc(50% - 158px);opacity:1;transform:perspective(800px) rotate(4deg) rotateY(10deg) scale(1)}}
+@keyframes yn-vfill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes yn-in{from{opacity:0}to{opacity:1}}
+@keyframes yn-out{from{opacity:1}to{opacity:0}}
+@keyframes yn-snap{0%{opacity:0}0.8%{opacity:1}99.2%{opacity:1}100%{opacity:0}}
+.yn-slide{min-height:900px;display:flex;align-items:center;justify-content:center;position:relative}
+.yn-bg{display:none}
+.yn-met-pin{min-height:900px;padding-top:120px !important;padding-bottom:120px !important}
+.yn-objs{display:none}
+.yn-t2{background:#eef3ff}.yn-t3{background:#1e5ef5}.yn-t4{background:#080b14}
+@keyframes yn-scale{from{transform:scale(.9);opacity:.3}to{transform:scale(1);opacity:1}}
+.yn-l2{transform:rotate(-9deg) scale(.92)}
+.yn-l1{transform:rotate(-4deg) scale(.96)}
+.yn-r1{transform:rotate(4deg) scale(.96)}
+.yn-r2{transform:rotate(9deg) scale(.92)}
+.yn-float{animation:yn-float 7s ease-in-out infinite}
+@supports (animation-timeline: view()){
+.yn-met{height:2800px;view-timeline-axis:block}
+.yn-met-a{view-timeline-name:--yn-ma}.yn-met-b{view-timeline-name:--yn-mb}.yn-met-c{view-timeline-name:--yn-mc}
+.yn-met-pin{position:sticky;top:0;height:100vh;overflow:hidden}
+.yn-a-fill{animation:yn-fill linear both;animation-timeline:--yn-ma;animation-range:contain 5% contain 90%}
+.yn-a-dot.yn-a0{animation:yn-dot linear both;animation-timeline:--yn-ma;animation-range:contain 3% contain 5%}
+.yn-a-num.yn-a0{animation:yn-num linear both;animation-timeline:--yn-ma;animation-range:contain 3% contain 5%}
+.yn-a-dot.yn-a1{animation:yn-dot linear both;animation-timeline:--yn-ma;animation-range:contain 31% contain 33%}
+.yn-a-num.yn-a1{animation:yn-num linear both;animation-timeline:--yn-ma;animation-range:contain 31% contain 33%}
+.yn-a-dot.yn-a2{animation:yn-dot linear both;animation-timeline:--yn-ma;animation-range:contain 60% contain 62%}
+.yn-a-num.yn-a2{animation:yn-num linear both;animation-timeline:--yn-ma;animation-range:contain 60% contain 62%}
+.yn-a-dot.yn-a3{animation:yn-dot linear both;animation-timeline:--yn-ma;animation-range:contain 88% contain 90%}
+.yn-a-num.yn-a3{animation:yn-num linear both;animation-timeline:--yn-ma;animation-range:contain 88% contain 90%}
+.yn-b-t.yn-b0,.yn-b-n.yn-b0{animation:yn-tf linear both;animation-timeline:--yn-mb;animation-range:contain 0% contain 25%}
+.yn-b-d.yn-b0{animation:yn-df linear both;animation-timeline:--yn-mb;animation-range:contain 0% contain 25%}
+.yn-c-w.yn-c0{animation:yn-wf linear both;animation-timeline:--yn-mc;animation-range:contain 0% contain 25%}
+.yn-c-d.yn-c0{opacity:0;animation:yn-on linear;animation-timeline:--yn-mc;animation-range:contain 0% contain 25%}
+.yn-b-t.yn-b1,.yn-b-n.yn-b1{animation:yn-tm linear both;animation-timeline:--yn-mb;animation-range:contain 25% contain 50%}
+.yn-b-d.yn-b1{animation:yn-dm linear both;animation-timeline:--yn-mb;animation-range:contain 25% contain 50%}
+.yn-c-w.yn-c1{animation:yn-wm linear both;animation-timeline:--yn-mc;animation-range:contain 25% contain 50%}
+.yn-c-d.yn-c1{opacity:0;animation:yn-on linear;animation-timeline:--yn-mc;animation-range:contain 25% contain 50%}
+.yn-b-t.yn-b2,.yn-b-n.yn-b2{animation:yn-tm linear both;animation-timeline:--yn-mb;animation-range:contain 50% contain 75%}
+.yn-b-d.yn-b2{animation:yn-dm linear both;animation-timeline:--yn-mb;animation-range:contain 50% contain 75%}
+.yn-c-w.yn-c2{animation:yn-wm linear both;animation-timeline:--yn-mc;animation-range:contain 50% contain 75%}
+.yn-c-d.yn-c2{opacity:0;animation:yn-on linear;animation-timeline:--yn-mc;animation-range:contain 50% contain 75%}
+.yn-b-t.yn-b3,.yn-b-n.yn-b3{animation:yn-tl linear both;animation-timeline:--yn-mb;animation-range:contain 75% contain 100%}
+.yn-b-d.yn-b3{animation:yn-dl linear both;animation-timeline:--yn-mb;animation-range:contain 75% contain 100%}
+.yn-c-w.yn-c3{animation:yn-wl linear both;animation-timeline:--yn-mc;animation-range:contain 75% contain 100%}
+.yn-c-d.yn-c3{opacity:0;animation:yn-on linear;animation-timeline:--yn-mc;animation-range:contain 75% contain 100%}
+.yn-b-n{color:#1e5ef5}
+.yn-hero{view-timeline-name:--yn-hero;view-timeline-axis:block}
+.yn-hl2{animation:yn-hl2 linear both;animation-timeline:--yn-hero;animation-range:exit 0% exit 55%}
+.yn-hl1{animation:yn-hl1 linear both;animation-timeline:--yn-hero;animation-range:exit 0% exit 55%}
+.yn-hc{animation:yn-hc linear both;animation-timeline:--yn-hero;animation-range:exit 0% exit 55%}
+.yn-hr1{animation:yn-hr1 linear both;animation-timeline:--yn-hero;animation-range:exit 0% exit 55%}
+.yn-hr2{animation:yn-hr2 linear both;animation-timeline:--yn-hero;animation-range:exit 0% exit 55%}
+.yn-story{height:3800px;view-timeline-name:--yn-story;view-timeline-axis:block}
+.yn-pin{position:sticky;top:0;height:100vh;overflow:hidden;border-radius:40px 40px 0 0;animation:yn-corner linear both;animation-timeline:--yn-story;animation-range:entry 80% entry 100%}
+.yn-bg{display:block}
+.yn-t2,.yn-t3,.yn-t4{background:transparent}
+.yn-slide{position:absolute;inset:0;min-height:0}
+.yn-b2{animation:yn-in linear both;animation-timeline:--yn-story;animation-range:contain 15% contain 35%}
+.yn-b3{animation:yn-in linear both;animation-timeline:--yn-story;animation-range:contain 40% contain 60%}
+.yn-b4{animation:yn-in linear both;animation-timeline:--yn-story;animation-range:contain 65% contain 85%}
+.yn-slide{opacity:0;align-items:flex-start;padding-top:calc(50vh - 120px)}
+.yn-objs{display:block}
+.yn-o1{animation:yn-swoop linear both;animation-timeline:--yn-story;animation-range:contain 3% contain 25%}
+.yn-o2{animation:yn-depth linear both;animation-timeline:--yn-story;animation-range:contain 25% contain 50%}
+.yn-o3{animation:yn-grow-curve linear both;animation-timeline:--yn-story;animation-range:contain 50% contain 75%}
+.yn-o4{animation:yn-strike linear both;animation-timeline:--yn-story;animation-range:contain 75% contain 100%}
+.yn-t1{animation:yn-on linear;animation-timeline:--yn-story;animation-range:entry 0% contain 25%}
+.yn-t2{animation:yn-on linear;animation-timeline:--yn-story;animation-range:contain 25% contain 50%}
+.yn-t3{animation:yn-on linear;animation-timeline:--yn-story;animation-range:contain 50% contain 75%}
+.yn-t4{animation:yn-on linear;animation-timeline:--yn-story;animation-range:contain 75% exit 100%}
+.yn-arc{animation:yn-arc linear both;animation-timeline:view();animation-range:exit 0% exit 100%}
+.yn-l2{animation:yn-fan-l2 linear both;animation-timeline:view();animation-range:cover 10% cover 55%}
+.yn-l1{animation:yn-fan-l1 linear both;animation-timeline:view();animation-range:cover 10% cover 55%}
+.yn-r1{animation:yn-fan-r1 linear both;animation-timeline:view();animation-range:cover 10% cover 55%}
+.yn-r2{animation:yn-fan-r2 linear both;animation-timeline:view();animation-range:cover 10% cover 55%}
+}
+@media (prefers-reduced-motion: reduce){
+.yn-b2,.yn-b3,.yn-b4,.yn-t1,.yn-t2,.yn-t3,.yn-t4,.yn-arc,.yn-a-fill,.yn-a-dot,.yn-a-num,.yn-b-t,.yn-b-n,.yn-b-d,.yn-c-w,.yn-c-d,.yn-hfade,.yn-o1,.yn-o2,.yn-o3,.yn-o4,.yn-hl2,.yn-hl1,.yn-hc,.yn-hr1,.yn-hr2,.yn-float,.yn-l2,.yn-l1,.yn-r1,.yn-r2{animation:none !important}
+}
+@media (max-width: 760px){
+.yn-hide-sm{display:none !important}
+.yn-h1{font-size:40px !important;letter-spacing:-1.4px !important}
+.yn-h2{font-size:34px !important;letter-spacing:-1.2px !important}
+.yn-pad{padding-left:20px !important;padding-right:20px !important}
+.yn-screen{min-height:0 !important;padding-top:120px !important;padding-bottom:120px !important}
+.yn-stack{top:88px !important}
+.yn-hglow{opacity:.35}
+.yn-collab-box{padding:12px 0 !important;border-top:0 !important;background:#ffffff;border:1px solid #e3e9f5 !important;border-radius:28px;box-shadow:0 16px 40px rgba(11,15,25,0.05)}
+.yn-collab-box>a{padding:28px 20px !important}
+.yn-collab-2{border-top:1px solid #e8edf7}
+.yn-app-ic{width:80px !important;height:80px !important;border-radius:20px !important}
+.yn-app-in{width:54px !important;height:54px !important}
+.yn-app-h{font-size:26px !important;letter-spacing:-0.8px !important}
+.yn-nav{padding:0 6px !important;min-height:50px}
+.yn-nav-cta{margin-left:0 !important;min-height:38px}
+.yn-hero-h{height:100svh !important;min-height:560px !important}
+.yn-stats{font-size:15px !important}
+.yn-dot2{display:none}
+.yn-st3{flex-basis:100%;text-align:center}
+.yn-pin{height:100svh}
+.yn-met{height:auto !important}
+.yn-met-pin{position:relative !important;height:auto !important;overflow:visible !important;padding:110px 24px !important;gap:56px !important;justify-content:flex-start !important}
+.yn-a-row{flex-direction:column;gap:44px !important;padding-left:36px}
+.yn-a-track,.yn-a-fill{display:none}
+.yn-a-row{view-timeline-name:--yn-arow;view-timeline-axis:block}
+.yn-a-row::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:#e3e9f5}
+.yn-a-row::after{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,#1e5ef5,#6f9bff);transform-origin:top;animation:yn-vfill linear both;animation-timeline:--yn-arow;animation-range:cover 20% cover 75%}
+.yn-a-dot{position:absolute !important;left:0;animation:yn-dot linear both !important;animation-timeline:view() !important;animation-range:cover 42% cover 50% !important}
+.yn-a-num{margin-top:0 !important;font-size:44px !important;animation:yn-num linear both !important;animation-timeline:view() !important;animation-range:cover 42% cover 50% !important}
+.yn-a-row>div{flex:none !important;position:relative;margin-left:-36px;padding-left:36px;gap:10px !important}
+.yn-screen{min-height:0 !important;padding-top:110px !important;padding-bottom:110px !important}
+.yn-txt{padding:0 20px !important;align-items:center !important;text-align:center !important}
+.yn-slide{padding-top:calc(50svh - 60px)}
+.yn-obj{width:130px !important;height:130px !important;margin:-65px 0 0 -65px !important}
+.yn-o1,.yn-o2,.yn-o3{animation-name:yn-mob}
+.yn-o4{animation-name:yn-mob-last}
+}
+</style>
+</head>
+<body>
+<div style="position: relative; width: 100%; background: #ffffff; color: #0b0f19; font-family: 'Plus Jakarta Sans', Arial, sans-serif; overflow-x: clip">
+
+<div class="yn-pad" style="position: sticky; top: 0; z-index: 50; height: 0; padding: 0 48px">
+<div style="max-width: 1240px; margin: 0 auto; padding-top: 28px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+<a href="#top" style="display: inline-flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 22px 0 14px; background: rgba(255,255,255,0.6); backdrop-filter: blur(22px) saturate(170%); -webkit-backdrop-filter: blur(22px) saturate(170%); border: 1px solid rgba(221,228,242,0.9); border-radius: 999px; box-shadow: 0 8px 30px rgba(11,15,25,0.05); text-decoration: none">
+<img src="assets/yunoly-logo.png" alt="Logo Yunoly" style="width: 26px; height: 26px">
+<span style="font-size: 18px; font-weight: 700; letter-spacing: -0.6px">yunoly</span>
+</a>
+<nav class="yn-nav" aria-label="Menu principale" style="display: inline-flex; align-items: center; gap: 2px; min-height: 50px; padding: 0 6px 0 10px; background: rgba(255,255,255,0.6); backdrop-filter: blur(22px) saturate(170%); -webkit-backdrop-filter: blur(22px) saturate(170%); border: 1px solid rgba(221,228,242,0.9); border-radius: 999px; box-shadow: 0 8px 30px rgba(11,15,25,0.05); font-size: 15px; font-weight: 600">
+<a class="yn-hide-sm" href="#studio" style="padding: 10px 12px; text-decoration: none">Studio</a>
+<a class="yn-hide-sm" href="#metodo" style="padding: 10px 12px; text-decoration: none">Metodo</a>
+<a class="yn-hide-sm" href="#prodotti" style="padding: 10px 12px; text-decoration: none">Prodotti</a>
+<a class="yn-nav-cta" href="#collabora" style="margin-left: 4px; display: inline-flex; align-items: center; min-height: 38px; padding: 0 16px; background: #0b0f19; color: #ffffff; border-radius: 999px; text-decoration: none">Investitori</a>
+</nav>
+</div>
+</div>
+
+<section id="top" class="yn-hero yn-hero-h" style="position: sticky; top: 0; z-index: 0; overflow: hidden; height: 100vh; min-height: 720px; max-height: 1000px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #ffffff">
+<div class="yn-hglow" aria-hidden="true" style="position: absolute; left: 50%; top: -260px; width: 1200px; height: 700px; margin-left: -600px; border-radius: 50%; background: radial-gradient(closest-side, rgba(201,216,255,0.55), rgba(201,216,255,0)); pointer-events: none"></div>
+<div class="yn-pad yn-hfade" style="position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 0 48px 40px">
+<h1 class="yn-h1" style="margin: 0; font-size: 62px; font-weight: 700; line-height: 1.08; letter-spacing: -2.4px; max-width: 1100px">Costruiamo app che crescono<br><span style="font-style: italic; font-weight: 600; color: #1e5ef5">dove le persone guardano</span></h1>
+</div>
+<div class="yn-hglow" aria-hidden="true" style="position: absolute; z-index: 1; left: 50%; bottom: 60px; width: 1200px; height: 520px; margin-left: -600px; border-radius: 50%; background: radial-gradient(closest-side, rgba(30,94,245,0.16), rgba(30,94,245,0.05) 55%, rgba(30,94,245,0) 100%); filter: blur(20px); pointer-events: none"></div>
+<p style="position: absolute; z-index: 3; left: 0; right: 0; bottom: 48px; margin: 0; padding: 0 20px; display: flex; justify-content: center"><span class="yn-stats" style="display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 10px; font-size: 17px; font-weight: 600; letter-spacing: -0.2px; color: #0b0f19"><span>Validata in 30 giorni</span><span style="color: #1e5ef5">·</span><span>€0 in pubblicità</span><span class="yn-dot2" style="color: #1e5ef5">·</span><span class="yn-st3">500K views a settimana</span></span></p>
+</section>
+
+<section id="studio" class="yn-story" aria-label="Lo studio in numeri" style="position: relative; z-index: 2; background: #ffffff; border-radius: 40px 40px 0 0; box-shadow: 0 -24px 70px rgba(11,15,25,0.10)">
+<div class="yn-pin">
+<div aria-hidden="true" class="yn-bg yn-b1" style="position: absolute; inset: 0; background: #ffffff"></div>
+<div aria-hidden="true" class="yn-bg yn-b2" style="position: absolute; inset: 0; background: radial-gradient(1000px 700px at 50% 120%, rgba(30,94,245,0.30), rgba(30,94,245,0) 70%), radial-gradient(700px 500px at 15% 10%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%), linear-gradient(180deg, #f2f6ff 0%, #dde7fd 100%)"></div>
+<div aria-hidden="true" class="yn-bg yn-b3" style="position: absolute; inset: 0; background: radial-gradient(900px 600px at 20% 0%, rgba(143,176,255,0.55), rgba(143,176,255,0) 70%), radial-gradient(1000px 700px at 90% 110%, rgba(10,32,110,0.75), rgba(10,32,110,0) 70%), #1e5ef5"></div>
+<div aria-hidden="true" class="yn-bg yn-b4" style="position: absolute; inset: 0; background: radial-gradient(1100px 600px at 50% 115%, rgba(30,94,245,0.55), rgba(30,94,245,0) 70%), radial-gradient(700px 500px at 85% 0%, rgba(59,116,255,0.18), rgba(59,116,255,0) 70%), #080b14"></div>
+<div class="yn-objs" aria-hidden="true" style="position: absolute; inset: 0; z-index: 1; pointer-events: none">
+<div style="position: relative; height: 100%; max-width: 1240px; margin: 0 auto">
+<img loading="lazy" class="yn-obj yn-o1" src="assets/glass-1-telefono.webp" alt="" style="position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; object-fit: contain; filter: drop-shadow(0 24px 36px rgba(8,22,70,0.22))">
+<img loading="lazy" class="yn-obj yn-o2" src="assets/glass-2-card.webp" alt="" style="position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; object-fit: contain; filter: drop-shadow(0 24px 36px rgba(8,22,70,0.22))">
+<img loading="lazy" class="yn-obj yn-o3" src="assets/glass-3-onda.webp" alt="" style="position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; object-fit: contain; filter: drop-shadow(0 24px 36px rgba(8,22,70,0.22))">
+<img loading="lazy" class="yn-obj yn-o4" src="assets/glass-4-fulmine.webp" alt="" style="position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; object-fit: contain; filter: drop-shadow(0 24px 36px rgba(8,22,70,0.22))">
+</div>
+</div>
+<div class="yn-slide yn-t1">
+<div class="yn-pad yn-txt" style="width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; padding: 0 48px">
+<p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: #1e5ef5">IL METODO, PROVATO</p>
+<h2 class="yn-h2" style="margin: 0; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -2px; color: #0b0f19">Un’idea validata in 30 giorni.<br><span style="font-style: italic; font-weight: 600; color: #1e5ef5">Con €0 in pubblicità.</span></h2>
+<p style="margin: 0; min-height: 60px; font-size: 18px; line-height: 1.65; color: #5b6478; max-width: 540px">È quello che abbiamo fatto con NoonFrame, il nostro primo prodotto.</p>
+</div>
+</div>
+<div class="yn-slide yn-t2">
+<div class="yn-pad yn-txt" style="width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; padding: 0 48px">
+<p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: #1e5ef5">PRIMO MESE</p>
+<h2 class="yn-h2" style="margin: 0; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -2px; color: #0b0f19">4.117 iscritti.<br><span style="font-style: italic; font-weight: 600; color: #1e5ef5">130 clienti paganti.</span></h2>
+<p style="margin: 0; min-height: 60px; font-size: 18px; line-height: 1.65; color: #4a5468; max-width: 540px">Tutto in organico, dal lancio del 7 ottobre.</p>
+</div>
+</div>
+<div class="yn-slide yn-t3">
+<div class="yn-pad yn-txt" style="width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; padding: 0 48px">
+<p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: #dce6ff">DISTRIBUZIONE</p>
+<h2 class="yn-h2" style="margin: 0; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -2px; color: #ffffff">500K views a settimana.<br><span style="font-style: italic; font-weight: 600; color: #dce6ff">Partendo da zero follower.</span></h2>
+<p style="margin: 0; min-height: 60px; font-size: 18px; line-height: 1.65; color: #e3ebff; max-width: 540px">Pagine nostre, verticali sul target, un video al giorno.</p>
+</div>
+</div>
+<div class="yn-slide yn-t4">
+<div class="yn-pad yn-txt" style="width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; padding: 0 48px">
+<p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: #9cbcff">VELOCITÀ</p>
+<h2 class="yn-h2" style="margin: 0; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -2px; color: #ffffff">Il mondo è veloce.<br><span style="font-style: italic; font-weight: 600; color: #8fb0ff">Noi lo siamo di più.</span></h2>
+<p style="margin: 0; min-height: 60px; font-size: 18px; line-height: 1.65; color: #c9d3e6; max-width: 540px">Lancio il 7 ottobre, V2 il 27, nuovo paywall il 28. Una settimana dopo, abbonati più che raddoppiati.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="metodo" class="yn-met yn-met-a" style="position: relative; z-index: 2; background: #ffffff">
+<div class="yn-met-pin yn-pad" style="display: flex; flex-direction: column; justify-content: center; gap: 88px; padding: 0 140px"><div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px"><p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: #1e5ef5">COME LAVORIAMO</p><h2 class="yn-h2" style="margin: 0; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -2px">Un’app, <span style="font-style: italic; font-weight: 600; color: #1e5ef5">un mese.</span></h2></div>
+<div class="yn-a-row" style="position: relative; display: flex; gap: 48px"><div class="yn-a-track" aria-hidden="true" style="position: absolute; left: 9px; right: 0; top: 8px; height: 2px; background: #e3e9f5"></div><div class="yn-a-fill" aria-hidden="true" style="position: absolute; left: 9px; top: 8px; height: 2px; width: calc(75% + 36px); background: linear-gradient(90deg, #1e5ef5, #6f9bff)"></div><div style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 18px"><span class="yn-a-dot yn-a0" style="position: relative; z-index: 1; width: 18px; height: 18px; border-radius: 50%; background: #ffffff; border: 2px solid #c9d3e6"></span><p class="yn-a-num yn-a0" style="margin: 8px 0 0; font-size: 64px; font-weight: 700; letter-spacing: -2.5px; line-height: 1; color: #c9d3e6">01</p><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #5b6478">SETTIMANA 1</p><h3 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.8px">Creiamo</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5b6478; max-width: 250px">Una V1 essenziale, costruita intorno all’unica feature che serve al video.</p></div><div style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 18px"><span class="yn-a-dot yn-a1" style="position: relative; z-index: 1; width: 18px; height: 18px; border-radius: 50%; background: #ffffff; border: 2px solid #c9d3e6"></span><p class="yn-a-num yn-a1" style="margin: 8px 0 0; font-size: 64px; font-weight: 700; letter-spacing: -2.5px; line-height: 1; color: #c9d3e6">02</p><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #5b6478">SETTIMANE 2–3</p><h3 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.8px">Validiamo</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5b6478; max-width: 250px">In organico, su pagine nostre verticali sul target. €0 in pubblicità.</p></div><div style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 18px"><span class="yn-a-dot yn-a2" style="position: relative; z-index: 1; width: 18px; height: 18px; border-radius: 50%; background: #ffffff; border: 2px solid #c9d3e6"></span><p class="yn-a-num yn-a2" style="margin: 8px 0 0; font-size: 64px; font-weight: 700; letter-spacing: -2.5px; line-height: 1; color: #c9d3e6">03</p><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #5b6478">SETTIMANA 4</p><h3 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.8px">Scaliamo</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5b6478; max-width: 250px">Solo se i numeri funzionano: creator UGC formati da noi, poi paid.</p></div><div style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 18px"><span class="yn-a-dot yn-a3" style="position: relative; z-index: 1; width: 18px; height: 18px; border-radius: 50%; background: #ffffff; border: 2px solid #c9d3e6"></span><p class="yn-a-num yn-a3" style="margin: 8px 0 0; font-size: 64px; font-weight: 700; letter-spacing: -2.5px; line-height: 1; color: #c9d3e6">04</p><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #5b6478">SEMPRE</p><h3 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.8px">Misuriamo</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5b6478; max-width: 250px">Ottimizziamo ogni settimana e molliamo presto quello che non converte.</p></div></div>
+</div>
+</section>
+
+<section id="prodotti" class="yn-pad yn-screen" style="position: relative; z-index: 2; min-height: 900px; padding: 160px 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 88px; background: #ffffff">
+<div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px"><p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: #1e5ef5">I NOSTRI PRODOTTI</p><h2 class="yn-h2" style="margin: 0; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -2px">App che vedi<br><span style="font-style: italic; font-weight: 600; color: #1e5ef5">prima di scaricarle.</span></h2></div>
+<div style="width: 100%; max-width: 980px; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 64px 0"><a href="https://noonframe.com/" target="_blank" rel="noopener" aria-label="Apri il sito di NoonFrame" style="flex: 1 1 320px; max-width: 420px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; color: #0b0f19; text-decoration: none"><div class="yn-app-ic" style="width: 128px; height: 128px; display: flex; align-items: center; justify-content: center; background: #0b0f19; border-radius: 30px; box-shadow: 0 24px 50px rgba(11,15,25,0.18), inset 0 1px 0 rgba(255,255,255,0.12)"><img src="assets/noonframe-logo.png" alt="Logo NoonFrame" class="yn-app-in" style="width: 88px; height: 88px; object-fit: contain"></div><div style="display: flex; flex-direction: column; gap: 8px; align-items: center"><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #1e5ef5">CREATOR TOOLS</p><h3 class="yn-app-h" style="margin: 0; font-size: 34px; font-weight: 700; letter-spacing: -1.2px">NoonFrame</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5b6478; max-width: 320px">Clip AI per creator: incolli il link di una live, le clip verticali arrivano da sole.</p><span style="margin-top: 4px; font-size: 15px; font-weight: 700; color: #1e5ef5">Scopri NoonFrame →</span></div></a><div aria-hidden="true" class="yn-hide-sm" style="align-self: stretch; width: 1px; margin: 20px 40px; background: linear-gradient(180deg, rgba(221,228,242,0), #dde4f2 30%, #dde4f2 70%, rgba(221,228,242,0))"></div><a href="https://getcalicam.com/it" target="_blank" rel="noopener" aria-label="Apri il sito di CaliCam" style="flex: 1 1 320px; max-width: 420px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; color: #0b0f19; text-decoration: none"><img class="yn-app-ic" src="assets/calicam-logo.jpg" alt="Logo CaliCam" style="width: 128px; height: 128px; object-fit: cover; border-radius: 30px; box-shadow: 0 24px 50px rgba(11,15,25,0.18)"><div style="display: flex; flex-direction: column; gap: 8px; align-items: center"><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #1e5ef5">HEALTH &amp; FITNESS</p><h3 class="yn-app-h" style="margin: 0; font-size: 34px; font-weight: 700; letter-spacing: -1.2px">CaliCam</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5b6478; max-width: 320px">Il Duolingo del calisthenics: la fotocamera conta le ripetizioni e ti fa salire di livello.</p><span style="margin-top: 4px; font-size: 15px; font-weight: 700; color: #1e5ef5">Scopri CaliCam →</span></div></a></div>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; text-align: center; color: #5b6478">Entrambe al 100% dello studio.<br>La prossima la scegliamo con lo stesso metodo.</p>
+</section>
+
+<section id="collabora" class="yn-pad yn-screen" style="position: relative; z-index: 2; overflow: hidden; min-height: 900px; padding: 160px 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 72px; background: #f5f7fb">
+<div aria-hidden="true" style="position: absolute; left: 50%; top: 18%; width: 1000px; height: 560px; margin-left: -500px; border-radius: 50%; background: radial-gradient(closest-side, rgba(30,94,245,0.12), rgba(30,94,245,0) 100%); pointer-events: none"></div>
+<div style="position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px"><p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; color: #1e5ef5">INVESTITORI</p><h2 class="yn-h2" style="margin: 0; font-size: 60px; font-weight: 700; line-height: 1.06; letter-spacing: -2.2px">Il round è aperto.<br><span style="font-style: italic; font-weight: 600; color: #1e5ef5">Cresci con noi.</span></h2><p style="margin: 0; font-size: 18px; line-height: 1.65; color: #5b6478; max-width: 560px">Numeri, piano di crescita e termini sono nel deck. Te lo mandiamo noi, insieme a una call con i founder.</p><div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px"><a href="#collabora" data-open="investitore" style="display: inline-flex; align-items: center; min-height: 54px; padding: 0 28px; background: #1e5ef5; color: #ffffff; border-radius: 999px; font-size: 16px; font-weight: 700; text-decoration: none; box-shadow: 0 12px 30px rgba(30,94,245,0.30)">Richiedi il deck</a><a href="#collabora" data-open="investitore" style="display: inline-flex; align-items: center; min-height: 54px; padding: 0 28px; background: #ffffff; border: 1px solid #dde4f2; color: #0b0f19; border-radius: 999px; font-size: 16px; font-weight: 700; text-decoration: none">Prenota una call</a></div></div>
+<div class="yn-collab-box" style="position: relative; width: 100%; max-width: 900px; display: flex; flex-wrap: wrap; align-items: stretch; padding-top: 56px; border-top: 1px solid #dde4f2"><a href="#collabora" data-open="founder" style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 8px 24px; color: #0b0f19; text-decoration: none"><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #5b6478">FOUNDER DI APP</p><h3 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.8px">Porta la tua app</h3><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #5b6478; max-width: 340px">Hai una feature forte ma non trovi utenti? La portiamo sui social, in partnership.</p><span style="margin-top: 4px; font-size: 15px; font-weight: 700; color: #1e5ef5">Candida la tua app →</span></a><div aria-hidden="true" class="yn-hide-sm" style="width: 1px; background: #dde4f2"></div><a class="yn-collab-2" href="#collabora" data-open="creator" style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 8px 24px; color: #0b0f19; text-decoration: none"><p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #5b6478">CREATOR</p><h3 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.8px">Entra nella rete</h3><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #5b6478; max-width: 340px">Creator UGC formati da noi, con fisso mensile e bonus sulle views.</p><span style="margin-top: 4px; font-size: 15px; font-weight: 700; color: #1e5ef5">Diventa creator →</span></a></div>
+</section>
+
+<section style="position: relative; z-index: 2; overflow: hidden; height: 720px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #f5f7fb">
+<div class="yn-pad" style="position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 0 48px">
+<h2 class="yn-h2 yn-reveal" style="margin: 0; font-size: 60px; font-weight: 700; line-height: 1.08; letter-spacing: -2.2px">Ci vediamo<br><span style="font-style: italic; font-weight: 600; color: #1e5ef5">nella For You.</span></h2>
+<a href="#top" data-open="contatto" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 26px; background: #0b0f19; color: #ffffff; border-radius: 999px; font-size: 15px; font-weight: 700; text-decoration: none">Contattaci</a>
+</div>
+<div aria-hidden="true" style="position: absolute; z-index: 1; left: 50%; bottom: 40px; width: 1200px; height: 520px; margin-left: -600px; border-radius: 50%; background: radial-gradient(closest-side, rgba(30,94,245,0.16), rgba(30,94,245,0.05) 55%, rgba(30,94,245,0) 100%); filter: blur(20px); pointer-events: none"></div>
+</section>
+
+<footer class="yn-pad" style="position: relative; z-index: 2; overflow: hidden; background: #ffffff; padding: 72px 48px 0; border-top: 1px solid #e8edf7">
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 14px; max-width: 320px">
+<div style="display: flex; align-items: center; gap: 10px"><img src="assets/yunoly-logo.png" alt="Logo Yunoly" style="width: 28px; height: 28px"><span style="font-size: 20px; font-weight: 700; letter-spacing: -0.6px">yunoly</span></div>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #5b6478">Studio di app social-first.<br>Costruiamo, validiamo e scaliamo app consumer.</p>
+<div style="display: flex; gap: 10px; margin-top: 6px"><a href="#top" aria-label="Instagram di Yunoly" style="display: inline-flex; color: #0b0f19"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="1.5" width="21" height="21" rx="5.5" fill="currentColor"/><rect x="6" y="6" width="12" height="12" rx="3.5" fill="none" stroke="#f5f7fb" stroke-width="1.8"/><circle cx="12" cy="12" r="2.8" fill="none" stroke="#f5f7fb" stroke-width="1.8"/><circle cx="15.6" cy="8.4" r="0.9" fill="#f5f7fb"/></svg></a><a href="#top" aria-label="LinkedIn di Yunoly" style="display: inline-flex; color: #0b0f19"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="1.5" width="21" height="21" rx="5.5" fill="currentColor"/><rect x="6.2" y="10" width="2.6" height="7.6" fill="#f5f7fb"/><circle cx="7.5" cy="7.1" r="1.5" fill="#f5f7fb"/><path d="M10.8 10h2.5v1.1c.4-.7 1.3-1.3 2.6-1.3 2.4 0 2.9 1.5 2.9 3.6v4.2h-2.6v-3.7c0-.9-.1-1.9-1.2-1.9s-1.6.8-1.6 1.8v3.8h-2.6V10z" fill="#f5f7fb"/></svg></a></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 64px">
+<nav aria-label="Studio" style="display: flex; flex-direction: column; gap: 12px; font-size: 15px">
+<p style="margin: 0 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #5b6478">STUDIO</p>
+<a href="#studio" style="color: #0b0f19; text-decoration: none">Il metodo, provato</a>
+<a href="#metodo" style="color: #0b0f19; text-decoration: none">Come lavoriamo</a>
+<a href="#prodotti" style="color: #0b0f19; text-decoration: none">Prodotti</a>
+</nav>
+<nav aria-label="Collabora" style="display: flex; flex-direction: column; gap: 12px; font-size: 15px">
+<p style="margin: 0 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #5b6478">COLLABORA</p>
+<a href="#collabora" style="color: #0b0f19; text-decoration: none">Investitori</a>
+<a href="#collabora" data-open="founder" style="color: #0b0f19; text-decoration: none">Porta la tua app</a>
+<a href="#collabora" data-open="creator" style="color: #0b0f19; text-decoration: none">Diventa creator</a>
+</nav>
+<nav aria-label="Prodotti" style="display: flex; flex-direction: column; gap: 12px; font-size: 15px">
+<p style="margin: 0 0 4px; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #5b6478">APP</p>
+<a href="https://noonframe.com/" target="_blank" rel="noopener" style="color: #0b0f19; text-decoration: none">NoonFrame</a>
+<a href="https://getcalicam.com/it" target="_blank" rel="noopener" style="color: #0b0f19; text-decoration: none">CaliCam</a>
+</nav>
+</div>
+</div>
+<div style="max-width: 1240px; margin: 56px auto 0; padding-top: 22px; border-top: 1px solid #eef2f9; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 13px; color: #5b6478">
+<span>© 2026 Yunoly · Milano</span>
+<a href="privacy.html" style="color: #5b6478; text-decoration: none">Privacy policy</a>
+</div>
+<p aria-hidden="true" class="yn-wordmark" style="margin: 24px 0 0; text-align: center; font-size: 22vw; font-weight: 800; line-height: 0.78; letter-spacing: -0.06em; background: linear-gradient(180deg, #dbe5fb 0%, #f3f6fd 70%, #ffffff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; user-select: none">yunoly</p>
+</footer>
+
+
+</div>
+<div id="yn-modal" class="yn-modal" role="dialog" aria-modal="true" aria-label="Contattaci" hidden><div class="yn-modal-panel"><button type="button" aria-label="Chiudi" data-close style="position: absolute; top: 16px; right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; background: #f2f5fb; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b0f19" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><form class="yn-form" data-tipo="investitore" hidden style="display: flex; flex-direction: column; gap: 14px" novalidate><div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px"><h3 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.8px">Richiedi il deck</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5b6478">Ti mandiamo numeri, piano e termini del round. Se vuoi, fissiamo anche una call.</p></div><input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px"><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Nome e cognome<input name="nome" type="text" required autocomplete="name" placeholder="Mario Rossi" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Email<input name="email" type="email" required autocomplete="email" placeholder="mario@fondo.com" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px"><div class="yn-dd" data-name="ruolo" style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557; position: relative"><span>Chi sei</span><input type="hidden" name="ruolo"><button type="button" class="yn-dd-btn" aria-haspopup="listbox" aria-expanded="false"><span class="yn-dd-val">Seleziona</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5b6478" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="yn-dd-menu" role="listbox" hidden><button type="button" role="option" class="yn-opt" data-value="Business angel">Business angel<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Venture capital">Venture capital<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Family office">Family office<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Founder / imprenditore">Founder / imprenditore<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Altro">Altro<span class="yn-chk" aria-hidden="true">✓</span></button></div><span class="yn-dd-err" hidden>Scegli un’opzione</span></div><div class="yn-dd" data-name="ticket" style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557; position: relative"><span>Ticket indicativo</span><input type="hidden" name="ticket"><button type="button" class="yn-dd-btn" aria-haspopup="listbox" aria-expanded="false"><span class="yn-dd-val">Seleziona</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5b6478" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="yn-dd-menu" role="listbox" hidden><button type="button" role="option" class="yn-opt" data-value="Meno di 10k €">Meno di 10k €<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="10–50k €">10–50k €<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="50–150k €">50–150k €<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Oltre 150k €">Oltre 150k €<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Da definire">Da definire<span class="yn-chk" aria-hidden="true">✓</span></button></div><span class="yn-dd-err" hidden>Scegli un’opzione</span></div></div><div class="yn-dd" data-name="fonte" style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557; position: relative"><span>Come ci hai conosciuto</span><input type="hidden" name="fonte"><button type="button" class="yn-dd-btn" aria-haspopup="listbox" aria-expanded="false"><span class="yn-dd-val">Seleziona</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5b6478" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="yn-dd-menu" role="listbox" hidden><button type="button" role="option" class="yn-opt" data-value="Ascensore">Ascensore<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Instagram">Instagram<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="LinkedIn">LinkedIn<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Passaparola">Passaparola<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Altro">Altro<span class="yn-chk" aria-hidden="true">✓</span></button></div><span class="yn-dd-err" hidden>Scegli un’opzione</span></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px"><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Telefono <span style="font-weight: 500; color: #8b93a6">(facoltativo)</span><input name="telefono" type="tel" autocomplete="tel" placeholder="+39 …" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">LinkedIn <span style="font-weight: 500; color: #8b93a6">(facoltativo)</span><input name="linkedin" type="text" placeholder="linkedin.com/in/…" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label></div><p class="yn-form-err" hidden style="margin: 0; font-size: 14px; font-weight: 600; color: #c2410c"></p><button type="submit" class="yn-submit" style="min-height: 52px; margin-top: 4px; border: 0; border-radius: 999px; background: #1e5ef5; color: #ffffff; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 12px 30px rgba(30,94,245,0.28)">Richiedi il deck</button><p style="margin: 0; font-size: 12px; line-height: 1.6; text-align: center; color: #8b93a6">Usiamo questi dati solo per risponderti, niente spam.<br><a href="privacy.html" target="_blank" style="white-space: nowrap; color: #5b6478; text-decoration: underline; text-underline-offset: 2px">Leggi l’informativa privacy</a></p></form><form class="yn-form" data-tipo="founder" hidden style="display: flex; flex-direction: column; gap: 14px" novalidate><div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px"><h3 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.8px">Porta la tua app</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5b6478">Raccontaci cosa hai costruito: se ha una feature forte, la portiamo sui social.</p></div><input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px"><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Nome e cognome<input name="nome" type="text" required autocomplete="name" placeholder="Mario Rossi" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Email<input name="email" type="email" required autocomplete="email" placeholder="mario@app.com" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label></div><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Link dell’app<input name="app_link" type="text" required placeholder="App Store, Play Store o sito" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Cosa fa e quanti utenti ha <span style="font-weight: 500; color: #8b93a6">(facoltativo)</span><textarea name="messaggio" rows="4" maxlength="2000" placeholder="In due righe…" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box; padding: 12px 14px; min-height: 100px; resize: vertical"></textarea></label><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Telefono <span style="font-weight: 500; color: #8b93a6">(facoltativo)</span><input name="telefono" type="tel" autocomplete="tel" placeholder="+39 …" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label><p class="yn-form-err" hidden style="margin: 0; font-size: 14px; font-weight: 600; color: #c2410c"></p><button type="submit" class="yn-submit" style="min-height: 52px; margin-top: 4px; border: 0; border-radius: 999px; background: #1e5ef5; color: #ffffff; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 12px 30px rgba(30,94,245,0.28)">Invia la candidatura</button><p style="margin: 0; font-size: 12px; line-height: 1.6; text-align: center; color: #8b93a6">Usiamo questi dati solo per risponderti, niente spam.<br><a href="privacy.html" target="_blank" style="white-space: nowrap; color: #5b6478; text-decoration: underline; text-underline-offset: 2px">Leggi l’informativa privacy</a></p></form><form class="yn-form" data-tipo="creator" hidden style="display: flex; flex-direction: column; gap: 14px" novalidate><div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px"><h3 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.8px">Entra nella rete</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5b6478">Creator UGC formati da noi, con fisso mensile e bonus sulle views.</p></div><input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px"><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Nome e cognome<input name="nome" type="text" required autocomplete="name" placeholder="Giulia Bianchi" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Email<input name="email" type="email" required autocomplete="email" placeholder="giulia@email.com" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px"><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Profilo TikTok o Instagram<input name="handle" type="text" required placeholder="@tuonome" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label><div class="yn-dd" data-name="follower" style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557; position: relative"><span>Follower</span><input type="hidden" name="follower"><button type="button" class="yn-dd-btn" aria-haspopup="listbox" aria-expanded="false"><span class="yn-dd-val">Seleziona</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5b6478" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="yn-dd-menu" role="listbox" hidden><button type="button" role="option" class="yn-opt" data-value="Meno di 1.000">Meno di 1.000<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="1.000–10.000">1.000–10.000<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="10.000–100.000">10.000–100.000<span class="yn-chk" aria-hidden="true">✓</span></button><button type="button" role="option" class="yn-opt" data-value="Oltre 100.000">Oltre 100.000<span class="yn-chk" aria-hidden="true">✓</span></button></div><span class="yn-dd-err" hidden>Scegli un’opzione</span></div></div><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Telefono <span style="font-weight: 500; color: #8b93a6">(facoltativo)</span><input name="telefono" type="tel" autocomplete="tel" placeholder="+39 …" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label><p class="yn-form-err" hidden style="margin: 0; font-size: 14px; font-weight: 600; color: #c2410c"></p><button type="submit" class="yn-submit" style="min-height: 52px; margin-top: 4px; border: 0; border-radius: 999px; background: #1e5ef5; color: #ffffff; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 12px 30px rgba(30,94,245,0.28)">Candidati</button><p style="margin: 0; font-size: 12px; line-height: 1.6; text-align: center; color: #8b93a6">Usiamo questi dati solo per risponderti, niente spam.<br><a href="privacy.html" target="_blank" style="white-space: nowrap; color: #5b6478; text-decoration: underline; text-underline-offset: 2px">Leggi l’informativa privacy</a></p></form><form class="yn-form" data-tipo="contatto" hidden style="display: flex; flex-direction: column; gap: 14px" novalidate><div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px"><h3 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.8px">Scrivici</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5b6478">Per qualsiasi cosa: ti rispondiamo noi via email.</p></div><input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px"><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Nome e cognome<input name="nome" type="text" required autocomplete="name" placeholder="Mario Rossi" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Email<input name="email" type="email" required autocomplete="email" placeholder="mario@email.com" maxlength="200" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box"></label></div><label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #3d4557">Messaggio<textarea name="messaggio" rows="4" required maxlength="2000" placeholder="Scrivi qui…" style="width: 100%; min-height: 48px; padding: 0 14px; border: 1.5px solid #dde4f2; border-radius: 14px; background: #f8faff; font-family: inherit; font-size: 16px; color: #0b0f19; box-sizing: border-box; padding: 12px 14px; min-height: 100px; resize: vertical"></textarea></label><p class="yn-form-err" hidden style="margin: 0; font-size: 14px; font-weight: 600; color: #c2410c"></p><button type="submit" class="yn-submit" style="min-height: 52px; margin-top: 4px; border: 0; border-radius: 999px; background: #1e5ef5; color: #ffffff; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 12px 30px rgba(30,94,245,0.28)">Invia</button><p style="margin: 0; font-size: 12px; line-height: 1.6; text-align: center; color: #8b93a6">Usiamo questi dati solo per risponderti, niente spam.<br><a href="privacy.html" target="_blank" style="white-space: nowrap; color: #5b6478; text-decoration: underline; text-underline-offset: 2px">Leggi l’informativa privacy</a></p></form><div class="yn-sent" hidden style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 24px 8px"><span style="width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #eef3ff"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1e5ef5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><h3 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.8px">Ricevuto, grazie!</h3><p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5b6478; max-width: 340px">Ti scriviamo noi all’email che ci hai lasciato.</p><button type="button" data-close style="min-height: 48px; padding: 0 24px; border: 1px solid #dde4f2; border-radius: 999px; background: #ffffff; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Chiudi</button></div></div></div>
+<script>
+(function(){
+var SB_URL='https://tyuuvjhabdrzgfhrngnp.supabase.co';
+var SB_KEY='sb_publishable_gY_p4NyjlwEwQDAF4mh7uA_QSBfIZst';
+var REQ={investitore:['ruolo','ticket','fonte'],creator:['follower'],founder:[],contatto:[]};
+var COLS=['nome','email','ruolo','ticket','fonte','telefono','linkedin','app_link','handle','follower','messaggio'];
+var modal=document.getElementById('yn-modal'), lastFocus=null;
+function closeAllDd(except){document.querySelectorAll('.yn-dd.open').forEach(function(d){if(d!==except){d.classList.remove('open');d.querySelector('.yn-dd-menu').hidden=true;d.querySelector('.yn-dd-btn').setAttribute('aria-expanded','false');}});}
+function openModal(tipo){
+  lastFocus=document.activeElement;
+  modal.querySelectorAll('.yn-form').forEach(function(f){f.hidden=f.dataset.tipo!==tipo;});
+  modal.querySelector('.yn-sent').hidden=true;
+  modal.hidden=false;document.body.style.overflow='hidden';
+  var first=modal.querySelector('.yn-form[data-tipo="'+tipo+'"] input:not([type=hidden]):not([name=website])');if(first)first.focus();
+}
+function closeModal(){modal.hidden=true;document.body.style.overflow='';closeAllDd();if(lastFocus)lastFocus.focus();}
+document.addEventListener('click',function(e){
+  var o=e.target.closest('[data-open]');if(o){e.preventDefault();openModal(o.getAttribute('data-open'));return;}
+  if(e.target.closest('[data-close]')||e.target===modal){closeModal();return;}
+  var btn=e.target.closest('.yn-dd-btn');
+  if(btn){var dd=btn.closest('.yn-dd'),open=!dd.classList.contains('open');closeAllDd(dd);dd.classList.toggle('open',open);dd.querySelector('.yn-dd-menu').hidden=!open;btn.setAttribute('aria-expanded',String(open));return;}
+  var op=e.target.closest('.yn-opt');
+  if(op){var d=op.closest('.yn-dd'),v=op.dataset.value;d.querySelector('input[type=hidden]').value=v;d.querySelector('.yn-dd-val').textContent=v;d.classList.add('has-value');d.classList.remove('error');d.querySelector('.yn-dd-err').hidden=true;
+    d.querySelectorAll('.yn-opt').forEach(function(x){x.setAttribute('aria-selected',String(x===op));});closeAllDd();return;}
+  if(!e.target.closest('.yn-dd'))closeAllDd();
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden){if(document.querySelector('.yn-dd.open'))closeAllDd();else closeModal();}});
+modal.querySelectorAll('.yn-form').forEach(function(form){
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var tipo=form.dataset.tipo, err=form.querySelector('.yn-form-err'), ok=true;
+    err.hidden=true;
+    (REQ[tipo]||[]).forEach(function(n){var d=form.querySelector('.yn-dd[data-name="'+n+'"]');if(!d.querySelector('input').value){ok=false;d.classList.add('error');d.querySelector('.yn-dd-err').hidden=false;}});
+    form.querySelectorAll('input[required],textarea[required]').forEach(function(i){if(!i.value.trim()){ok=false;i.style.borderColor='#ea580c';}else{i.style.borderColor='';}});
+    var em=form.querySelector('input[name=email]');if(em&&em.value&&!/^\S+@\S+\.\S+$/.test(em.value)){ok=false;em.style.borderColor='#ea580c';}
+    if(!ok){err.textContent='Controlla i campi evidenziati.';err.hidden=false;return;}
+    var fd=new FormData(form);
+    var done=function(){form.hidden=true;modal.querySelector('.yn-sent').hidden=false;form.reset();form.querySelectorAll('.yn-dd').forEach(function(d){d.classList.remove('has-value');d.querySelector('.yn-dd-val').textContent='Seleziona';d.querySelectorAll('.yn-opt').forEach(function(x){x.removeAttribute('aria-selected');});});};
+    if(fd.get('website')){done();return;}
+    var data={tipo:tipo};COLS.forEach(function(c){var v=fd.get(c);if(v&&String(v).trim())data[c]=String(v).trim();});
+    var b=form.querySelector('.yn-submit');b.disabled=true;
+    fetch(SB_URL+'/rest/v1/leads',{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)})
+      .then(function(r){if(!r.ok)throw new Error(r.status);done();})
+      .catch(function(){err.textContent='Invio non riuscito. Riprova o scrivici a emanuele.saurro@yunoly.com';err.hidden=false;})
+      .finally(function(){b.disabled=false;});
+  });
+});
+})();
+</script>
+</body>
+</html>
